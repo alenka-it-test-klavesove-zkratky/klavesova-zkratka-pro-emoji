@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Emoji Rychlotest</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <div id="start-screen">
+            <p>Opravdu sis myslela, že tady najdeš tak snadno to řešení? Ne. Abys dostala to správné řešení, musíš dokázat, že umíš emoji pomocí určité klávesové zkratky používat...</p>
+            <p>Klikni na tlačítko níže, aby se ti spustil rychlotest a na konci možná dostaneš správnou odpověď do formuláře, pokud uděláš rychlotest bez chyb...</p>
+            <button id="start-button">Spustit rychlotest</button>
+        </div>
+
+        <div id="quiz-screen" class="hidden">
+            <h2 id="task-text"></h2>
+            <input type="text" id="emoji-input" placeholder="Zadej emoji zde">
+            <button id="continue-button">Pokračovat</button>
+            <p id="warning-text" class="hidden"></p>
+        </div>
+
+        <div id="end-screen" class="hidden">
+            <p>Gratuluji, smajlíky už umíš a zdá se, že klávesovou zkratku pro emoji ovládáš skvěle. Jako řešení do formuláře odevzdej následující text: <span class="highlight">skirmich-kvizy-alenka-it-emoji:[emoji už ovládám skvěle]</span>.</p>
+            <p class="tip"><i>Tip: Zkopíruj si zvýrazněný text a vlož jej do formuláře pomocí klávesové zkratky, kterou již znáš z někdy minula (jako správný výsledek ve formuláři odevzdej celý zvýrazněný text).</i></p>
+        </div>
+    </div>
+
+    <script>
+        const startScreen = document.getElementById('start-screen');
+        const quizScreen = document.getElementById('quiz-screen');
+        const endScreen = document.getElementById('end-screen');
+        const startButton = document.getElementById('start-button');
+        const taskText = document.getElementById('task-text');
+        const emojiInput = document.getElementById('emoji-input');
+        const continueButton = document.getElementById('continue-button');
+        const warningText = document.getElementById('warning-text');
+
+        let currentTaskIndex = 0;
+        const tasks = [
+            { text: "Vyjádři emoji: palec nahoru.", answer: "👍" },
+            { text: "Vyjádři emoji: palec dolů.", answer: "👎" },
+            { text: "Vyjádři emoji: smajlík zamilovaný (srdce namísto očí).", answer: "😍" },
+            { text: "Vyjádři emoji: spokojený smajlík se slunečními brýlemi.", answer: "😎" },
+            { text: "Vyjádři emoji: ikona zvuku / ikona noty (tři noty na jednom emoji).", answer: "🎶" },
+            { text: "Vyjádři emoji: rozjásaný smajlík s hvězdami místo očí.", answer: "🤩" },
+            { text: "Vyjádři emoji: emoji prasete (pouze hlava prasete).", answer: "🐷" },
+            { text: "Vyjádři emoji: emoji hamburger.", answer: "🍔" },
+            { text: "Vyjádři emoji: dva červené vykřičníky v jednom emoji.", answer: "‼️" },
+            { text: "Vyjádři emoji: ikona Wi-Fi (na modrém čtverci) [jak vypadá ikona Wi-Fi můžeš vidět na dolním panelu vpravo dole].", answer: "🛜" },
+            { text: "Vyjádři emoji: symbol = (rovná se).", answer: "🟰" },
+            { text: "Vyjádři emoji: spící smajlík (smajlík z písmeny zzz jakože spí).", answer: "😴" },
+            { text: "Tohle je poslední úloha. Takže bude složitější. Napiš 3 emoji za sebe bez mezer a bez čárek v tomto pořadí: palec nahoru, hodiny ukazující 3:00 nebo 15:00 (lidově =tři hodiny), čenich prasete.", answer: "👍🕒🐽" }
+        ];
+
+        startButton.addEventListener('click', () => {
+            startScreen.classList.add('hidden');
+            quizScreen.classList.remove('hidden');
+            loadTask();
+        });
+
+        continueButton.addEventListener('click', () => {
+            const userAnswer = emojiInput.value.trim();
+            emojiInput.value = '';
+
+            if (userAnswer === "") {
+                showWarning("V psacím poli není žádný emoji!", 'red', 5000);
+                return;
+            }
+
+            if (userAnswer === tasks[currentTaskIndex].answer) {
+                showWarning("Tohle bylo přesně správné řešení!", 'green', 4000);
+                currentTaskIndex++;
+                if (currentTaskIndex < tasks.length) {
+                    setTimeout(loadTask, 4000);
+                } else {
+                    setTimeout(() => {
+                        quizScreen.classList.add('hidden');
+                        endScreen.classList.remove('hidden');
+                    }, 4000);
+                }
+            } else {
+                showWarning("To nebylo zrovna správně. Zkontroluj, že máš přesně požadované emoji, nebo zda neexistují 2 podobné emoji...", 'red', 10000);
+            }
+        });
+
+        function loadTask() {
+            taskText.textContent = tasks[currentTaskIndex].text;
+        }
+
+        function showWarning(message, color, duration) {
+            warningText.textContent = message;
+            warningText.style.color = color;
+            warningText.classList.remove('hidden');
+            setTimeout(() => {
+                warningText.classList.add('hidden');
+            }, duration);
+        }
+    </script>
+</body>
+</html>
